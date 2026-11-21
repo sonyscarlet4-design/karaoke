@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Karaoke</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#191230">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="rpg-app dark-mode">
+
+    <header class="rpg-hud">
+        <div class="rpg-hud__player">
+            <img class="rpg-hud__avatar" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22120%22%20height%3D%22120%22%20viewBox%3D%220%200%20120%20120%22%3E%3Crect%20width%3D%22120%22%20height%3D%22120%22%20fill%3D%22%232b164d%22/%3E%3Ctext%20x%3D%2260%22%20y%3D%2268%22%20text-anchor%3D%22middle%22%20fill%3D%22%23f5b942%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2222%22%20font-weight%3D%22bold%22%3ELVL%2012%3C/text%3E%3C/svg%3E" alt="Avatar del jugador en Karaoke Stage" width="44" height="44" loading="lazy">
+            <div class="rpg-hud__meta">
+                <div class="rpg-hud__top-row">
+                    <h1 class="rpg-hud__name">KARAOKE STAGE</h1>
+                    <span class="rpg-badge rpg-badge--gold">LVL calidad</span>
+                    <span class="rpg-badge">SALAS VIP &amp; CÓCTELES</span>
+                </div>
+                <div class="rpg-xp-bar" aria-label="Progreso de nivel Ingeniería en Sistemas">
+                    <div class="rpg-xp-bar__fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="rpg-hud__controls" aria-label="Acciones principales y utilidades">
+            <button type="button" id="btnAbrirCocteles" class="rpg-btn">🍹 Cócteles</button>
+            <button type="button" id="btnAbrirComida" class="rpg-btn">🍽️ Comida</button>
+            <button type="button" id="btnAbrirHistorial" class="rpg-btn rpg-btn--gold">📋 Historial / Pago</button>
+            <button type="button" id="hydrateBtn" class="rpg-btn">🔄 Refresh</button>
+            <button type="button" id="themeBtn" class="rpg-btn">☀️ Claro</button>
+        </nav>
+    </header>
+
+    <aside id="socialWidget" class="social-widget" aria-label="Accesos sociales">
+        <nav class="social-widget__panel" aria-label="Redes sociales">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-widget__link">📸 Instagram</a>
+            <a href="https://wa.me/59175273771" target="_blank" rel="noopener noreferrer" class="social-widget__link">💬 WhatsApp</a>
+        </nav>
+        <button type="button" id="toggleSocialBtn" class="social-widget__toggle" aria-label="Colapsar panel social">◀</button>
+    </aside>
+
+    <main class="rpg-main">
+
+        <!-- 1. SALAS AL INICIO -->
+        <section class="accordion-item accordion-item--open" aria-label="Salas de Karaoke">
+            <button type="button" class="accordion-trigger">
+                <span>🎤 Salas de Karaoke (Al Inicio)</span>
+                <span class="accordion-trigger__icon">▼</span>
+            </button>
+            <div class="accordion-collapse">
+                <div class="accordion-collapse__inner">
+                    <p class="rpg-muted">Salas separadas de comida y cócteles. "Jugar Ronda" permanece deshabilitado.</p>
+                    <section id="arsenalGrid" class="catalogo-grid" aria-label="Catálogo de salas"></section>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. RESERVA DE SALA + AUDITORÍA EN VIVO A11Y / SMOKE TEST -->
+        <section id="seccionContacto" class="rpg-panel" aria-label="Reserva de sala y auditoría">
+            <h2 class="rpg-section-title">🗓️ Reserva de Sala (Día, Hora y Validaciones)</h2>
+            <form id="formReservaSala" class="rpg-form">
+                <div class="rpg-form__row">
+                    <input type="text" id="clienteNombreInput" class="rpg-input" placeholder="Tu nombre (solo letras)" required>
+                    <input type="text" id="clienteMensajeInput" class="rpg-input" placeholder="Estilo musical o nota (solo letras)" required>
+                </div>
+                <div class="rpg-form__row--3">
+                    <select id="clienteSalaInput" class="rpg-input" aria-label="Seleccionar sala">
+                        <option value="Sala Privada Acústica (Bs 120)">Sala Privada Acústica (Bs 120)</option>
+                        <option value="Suite VIP Escénica (Bs 220)">Suite VIP Escénica (Bs 220)</option>
+                    </select>
+                    <input type="date" id="reservaDiaInput" class="rpg-input" aria-label="Día de reserva" required>
+                    <input type="time" id="reservaHoraInput" class="rpg-input" aria-label="Hora de reserva" required>
+                </div>
+                <div class="rpg-actions-row">
+                    <button type="submit" class="rpg-btn rpg-btn--gold">Registrar Sala en Historial</button>
+                    <button type="button" id="btnSmokeTest" class="rpg-btn">🧪 Smoke Test DOM</button>
+                    <button type="button" id="btnAuditarA11Y" class="rpg-btn">♿ Auditar A11Y</button>
+                </div>
+            </form>
+            <div id="errorReservaSala" class="rpg-error-box"></div>
+            <div id="salidaSeguraText" class="rpg-preview-box">Listo para validar entradas usando .textContent.</div>
+            <div id="resultadoAuditoriaLive" class="rpg-preview-box" aria-live="polite">Auditoría A11Y / Smoke Test lista.</div>
+        </section>
+
+    </main>
+
+    <footer class="rpg-bottom-bar">
+        <nav class="rpg-bottom-bar__nav" aria-label="Secciones rápidas">
+         
+            +
+            
+        </nav>
+        <button type="button" class="rpg-cta-gold" data-open-modal="modalContacto">👑 Contacto</button>
+    </footer>
+
+    <!-- MODAL INDEPENDIENTE DE CÓCTELES, COMIDA E HISTORIAL -->
+    <div id="modalCartaHistorial" class="rpg-modal">
+        <section class="rpg-modal__card" aria-label="Carta e Historial">
+            <div class="rpg-modal__head">
+                <h2 id="tituloModalApartado" class="rpg-modal__title">📋 Historial</h2>
+                <button type="button" class="rpg-btn" data-close-modal aria-label="Cerrar ventana">✖</button>
+            </div>
+
+            <div id="bloqueCoctelesSolo" style="display:flex; flex-direction:column; gap:6px;">
+                <h3 class="rpg-card__title">🍹 Apartado Cócteles</h3>
+                <div id="listaCoctelesItems" style="display:flex; flex-direction:column; gap:6px;"></div>
+            </div>
+
+            <div id="bloqueComidaSolo" style="display:flex; flex-direction:column; gap:6px;">
+                <h3 class="rpg-card__title">🍽️ Apartado Comida</h3>
+                <div id="listaComidaItems" style="display:flex; flex-direction:column; gap:6px;"></div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:6px; border-top:1px solid var(--border-subtle); padding-top:8px;">
+                <h3 class="rpg-card__title">🧾 Historial Registrado</h3>
+                <ul id="listaHistorialGeneral" style="margin:0; padding-left:18px; font-size:0.76rem;"></ul>
+                <div id="totalGeneralBox" class="rpg-preview-box">Total acumulado: Bs 0</div>
+            </div>
+
+            <div id="bloqueConfirmacionPedido" style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:10px;">
+                <button type="button" id="btnLimpiarHistorial" class="rpg-btn">🗑️ Limpiar</button>
+                <button type="button" id="btnConfirmarPedido" class="rpg-btn rpg-btn--gold">✅ Confirmar Pedido</button>
+                <button type="button" id="btnCancelarConfirmacion" class="rpg-btn" style="display:none;">✖ Cancelar</button>
+                <span id="contadorConfirmacionPedido" role="status" aria-live="polite" style="font-size:0.82rem; font-weight:700; min-height:18px;"></span>
+            </div>
+        </section>
+    </div>
+
+    <div id="modalIntereses" class="rpg-modal">
+        <section class="rpg-modal__card" aria-label="Intereses del Lounge">
+            <div class="rpg-modal__head">
+                
+                <button type="button" class="rpg-btn" data-close-modal aria-label="Cerrar modal">✖</button>
+            </div>
+            <p class="rpg-card__desc">Salas de karaoke al inicio, y apartados independientes de cócteles y comida.</p>
+        </section>
+    </div>
+
+    <div id="modalHorario" class="rpg-modal">
+        <section class="rpg-modal__card" aria-label="Horario de Atención">
+            <div class="rpg-modal__head">
+                <h2 class="rpg-modal__title">⏰ Horario de Atención</h2>
+                <button type="button" class="rpg-btn" data-close-modal aria-label="Cerrar modal">✖</button>
+            </div>
+            <p class="rpg-card__desc">Abierto de lunes a domingo desde las 17:00 hasta medianoche o madrugada según día.</p>
+        </section>
+    </div>
+
+    <div id="modalMusica" class="rpg-modal">
+        <section class="rpg-modal__card" aria-label="Catálogo Musical y Rock">
+            <div class="rpg-modal__head">
+                <h2 class="rpg-modal__title">🎵 Catálogo Musical &amp; Rock</h2>
+                <button type="button" class="rpg-btn" data-close-modal aria-label="Cerrar modal">✖</button>
+            </div>
+            <p class="rpg-card__desc">Listas de rock en español e inglés, baladas, pop, indie y pistas listas para cantar.</p>
+        </section>
+    </div>
+
+    <div id="modalJuegos" class="rpg-modal">
+        <section class="rpg-modal__card" aria-label="Juegos y Retos en Sala">
+            <div class="rpg-modal__head">
+                <h2 class="rpg-modal__title">🎮 Juegos &amp; Retos en Sala</h2>
+                <button type="button" class="rpg-btn" data-close-modal aria-label="Cerrar modal">✖</button>
+            </div>
+            <p class="rpg-card__desc">Jugar Ronda permanece deshabilitado en esta versión.</p>
+        </section>
+    </div>
+
+    <div id="modalContacto" class="rpg-modal">
+        <section class="rpg-modal__card" aria-label="Contacto y Pago por WhatsApp">
+            <div class="rpg-modal__head">
+                <h2 class="rpg-modal__title">👑 Contacto &amp; Pago por WhatsApp</h2>
+                <button type="button" class="rpg-btn" data-close-modal aria-label="Cerrar modal">✖</button>
+            </div>
+            <p class="rpg-card__desc">Coordina tu reserva o envía tu historial acumulado para pagar por WhatsApp:</p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                <button type="button" id="btnAbrirHistorialDesdeModal" class="rpg-btn rpg-btn--gold">📋 Ver Historial y Pagar</button>
+                <a href="https://wa.me/59175273771" target="_blank" rel="noopener noreferrer" class="rpg-btn">📲 Abrir WhatsApp</a>
+            </div>
+        </section>
+    </div>
+
+    <script src="./script.js" defer></script>
+</body>
+</html>
